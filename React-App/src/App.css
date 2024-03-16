@@ -23,6 +23,8 @@
   --font-weight-bold: 700;
   --max-width: 100vb;
   --max-width-mobile: 40vb;
+  --max-width-mobile-2: 30vb;
+  --transition-timing: 0.3s;
 }
 * {
   margin: 0;
@@ -65,8 +67,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-white);
-  background-color: var(--color-gold);
+  background: var(--color-gold);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -150,6 +151,11 @@ body {
 }
 .logo__img:hover {
   filter: hue-rotate();
+  transform: scale(1.2);
+  background-color: #ffa500;
+  margin: 0.2rem;
+  border-radius: 0.5rem;
+  transition: var(--transition-timing);
 }
 .logo__link a {
   margin: 0 1rem;
@@ -223,6 +229,17 @@ body {
     gap: 1rem;
   }
 }
+#bioTop {
+  transform: translateY(-10rem);
+  opacity: 0;
+  transition: transform 2s, opacity 4s;
+}
+#buttonControls {
+  transform: translateY(10rem);
+  opacity: 0;
+  transition: transform 2s, opacity 4s;
+}
+
 .score-circle {
   width: 50px;
   height: 50px;
@@ -236,6 +253,9 @@ body {
   justify-content: center;
   color: white;
   font-size: 24px;
+  opacity: 0;
+  transition: opacity 2s;
+  animation: jump-4 3s infinite alternate ease-in-out;
   @media (max-width: 768px) {
     width: 40px;
     height: 40px;
@@ -252,10 +272,8 @@ body {
   text-align: center;
   max-width: var(--max-width);
   margin: 1rem 0.2rem;
-  overflow-y: auto;
-  /* -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none; */
+  opacity: 0;
+  transition: opacity 2s;
 
   @media (max-width: 768px) {
     font-size: var(--font-size-small-1);
@@ -272,11 +290,22 @@ body {
   }
 }
 
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  @media (max-width: 768px) {
+    margin: 0.5rem 0;
+  }
+}
 .card__input {
   padding: 0.2rem 1rem;
   border: 1px solid var(--color-light-gray);
   border-radius: 1rem;
-  width: 52vb;
+  /* max-width: 52vb; */
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
   outline: none;
@@ -284,13 +313,14 @@ body {
   margin-bottom: 0.5rem;
   @media (max-width: 768px) {
     font-size: var(--font-size-small);
+    width: var(--max-width-mobile-2);
   }
 }
 .buttons {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   gap: 1rem;
 }
 
@@ -302,22 +332,30 @@ body {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   border-radius: 10px;
   transition: background-color 0.3s ease;
+  @media (max-width: 768px) {
+    padding: 5px 10px;
+    font-size: 16px;
+  }
 }
 .next-button {
   background-color: inherit;
   border: 1px solid var(--color-gray);
   color: var(--color-gray);
   padding: 15px 32px;
+  font-size: 16px;
   text-align: center;
   text-decoration: none;
-  font-size: 16px;
   cursor: pointer;
   border-radius: 10px;
   transition: background-color 0.3s ease;
+  @media (max-width: 768px) {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
 }
 
 .next-button:hover {
@@ -413,7 +451,9 @@ body {
   transition: var(--transition-timing);
 
   @media (max-width: 768px) {
-    display: none;
+    right: 1rem;
+    top: 0.6rem;
+    bottom: auto;
   }
 }
 .contact__social {
@@ -421,18 +461,41 @@ body {
   width: 2.5rem;
   animation: jump-4 3s infinite alternate ease-in-out;
   padding: 0 1.5rem;
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+    width: 0;
+  }
+}
+
+.contact__social-left {
+  display: flex;
+  position: fixed;
+  left: 1rem;
+  bottom: 0.6rem;
+  justify-content: right;
+  align-items: center;
+  border-radius: 0.5rem;
+  transition: var(--transition-timing);
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 }
 .contact__img {
   border-radius: 50%;
-  padding: 0.1rem;
-  margin-right: 0.3rem;
-  max-width: 2rem;
 }
 .contact__img-2 {
+  max-height: 2rem;
+}
+.contact__img-2,
+.contact__img {
   padding: 0.1rem;
   margin-right: 0.3rem;
-  max-height: 2rem;
   max-width: 2rem;
+
+  @media (max-width: 768px) {
+    max-width: 1.5rem;
+  }
 }
 .heart__img {
   padding: 0.1rem;

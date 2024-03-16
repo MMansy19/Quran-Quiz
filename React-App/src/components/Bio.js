@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import fetchRandomAyah from "./API";
 
@@ -130,15 +131,37 @@ const Bio = () => {
     { id: 114, value: 'الناس' }
   ];
 
-  useEffect(() => {
-    fetchData();
-    populateDataList();
-    }, []);
+
+useEffect(() => {
+  fetchData();
+  populateDataList();
+
+  // Apply transition after a delay
+  const bioTop = document.getElementById("bioTop");
+  const bioCenter = document.querySelector(".bio__center");
+  const score = document.getElementById("score");
+  const buttonControls = document.getElementById("buttonControls");
   
+  setTimeout(() => {
+    bioTop.style.transform = "translateY(0)"; 
+    bioTop.style.opacity = 1;
+  }, 500); 
+  setTimeout(() => {
+    bioCenter.style.opacity = 1; 
+  }, 2000); 
+  setTimeout(() => {
+    score.style.opacity = 1; 
+  }, 5000); 
+  setTimeout(() => {
+    buttonControls.style.transform = "translateY(0)"; 
+    buttonControls.style.opacity = 1;
+  }, 3000); 
+}, []);
+
   const fetchData = async (customAyahNumber = 0) => {
     const randomAyah = await fetchRandomAyah(customAyahNumber);
     setRandomAyahText(randomAyah.text);
-    setRandomAyahNumberInSurah(randomAyah.numberInSurah);
+    setRandomAyahNumberInSurah(`(${randomAyah.numberInSurah})`);
     setRandomAyahNumber(randomAyah.number)
     setCorrectSurah(randomAyah.surah.name);
     setCorrectSurahNumber(randomAyah.surah.number);
@@ -156,47 +179,47 @@ const Bio = () => {
     });
   };
 
-const handleNextAyah = (event) => {
-    event.preventDefault();
-    fetchData();
-};
+  const handleNextAyah = (event) => {
+      event.preventDefault();
+      fetchData();
+  };
 
-const showNextAyah = (event) => {
-  event.preventDefault();
-  if (randomAyahNumber === 6236) return; // Corner Case: Last Verse of the Quraan
-  fetchData(randomAyahNumber + 1);
-  setHints(prevHints => prevHints + 1)
-  if((hints + 1) % 2 === 0)
-    setScore(score - 1)
-};
-const showPrevAyah = (event) => {
-  event.preventDefault();
-  if (randomAyahNumber === 1) return; // Corner Case: First Verse of the Quraan
-  fetchData(randomAyahNumber - 1);
-  setHints(prevHints => prevHints + 1)
-  if((hints + 1) % 2 === 0)
-    setScore(score - 1)
-};
+  const showNextAyah = (event) => {
+    event.preventDefault();
+    if (randomAyahNumber === 6236) return; // Corner Case: Last Verse of the Quraan
+    fetchData(randomAyahNumber + 1);
+    setHints(prevHints => prevHints + 1)
+    if((hints + 1) % 2 === 0)
+      setScore(score - 1)
+  };
+  const showPrevAyah = (event) => {
+    event.preventDefault();
+    if (randomAyahNumber === 1) return; // Corner Case: First Verse of the Quraan
+    fetchData(randomAyahNumber - 1);
+    setHints(prevHints => prevHints + 1)
+    if((hints + 1) % 2 === 0)
+      setScore(score - 1)
+  };
 
   const checkAnswer = (event) => {
     event.preventDefault();
     const selectedSurahID = parseInt(selectedSurah); // Parse selectedSurah to an integer
     let updatedScore = score; // Initialize with the current score
-
+    
     if (selectedSurahID === correctSurahNumber) {
-      updatedScore = score + 1;
+      updatedScore = score + 2;
       handleNextAyah(event);
     }
     else if (selectedSurahID === 0 )
     {
         setRandomAyahText(correctSurah);
-        setRandomAyahNumberInSurah("x");
+        setRandomAyahNumberInSurah("❤️");
         updatedScore = score - 1; // Penalty for not knowing
         setTimeout(() => {
-            handleNextAyah(event);
+          handleNextAyah(event);
           }, 2000); // wait for 2 seconds
     }
-     else {
+    else {
       updatedScore = score - 1;
     }
 
@@ -204,17 +227,23 @@ const showPrevAyah = (event) => {
     setScore(updatedScore);
     setSelectedSurah(""); // Reset selectedSurah state to empty string
   };
+  const handleKeyPress = (event) => {
+    if (event && event.key === "Enter") {
+      event.preventDefault();
+      checkAnswer(event); // Pass the event object to checkAnswer function
+    }
+  };
 
   return (
     <div className="bio" dir="rtl">
-      <div className="bio__top">{topAyah}
+      <div  className="bio__top"> <span id="bioTop"> {topAyah}</span>
         <div id="score" className="score-circle" dir="ltr">{score}</div>
       </div>
       
-      <div className="bio__center">{randomAyahText} ({randomAyahNumberInSurah})</div>
+      <div className="bio__center">{randomAyahText} {randomAyahNumberInSurah}</div>
       <div className="horizontal-line"></div>
       
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div id="buttonControls" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <form className="form">
           <input
             type="text"
@@ -223,13 +252,14 @@ const showPrevAyah = (event) => {
             className="card__input"
             placeholder="اختر سورة من كتاب الله"
             value={selectedSurah}
-            onChange={(e) => setSelectedSurah(e.target.value)} // Update selectedSurah state
+            onChange={(e) => setSelectedSurah(e.target.value)}
+            onKeyDown={(e) => handleKeyPress(e)} // Pass the event object to handleKeyPress
           />
           <datalist id="quranSuraList"></datalist>
 
           <div className="buttons">
             <button className="next-button" onClick={showPrevAyah}>الآية السابقة</button>
-            <button className="submit-button" onClick={checkAnswer}>إرسال</button>
+            <button className="submit-button" onClick={checkAnswer} >إرسال</button>
             <button className="next-button" onClick={showNextAyah}>الآية التالية</button>
           </div>
         </form>
